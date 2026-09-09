@@ -1,8 +1,23 @@
 const WebSocket = require("ws");
-
 const PORT = process.env.PORT || 8080;
- const wss = new WebSocket.Server({ port: process.env.PORT || 8080 });
+const wss = new WebSocket.Server({
+  port: PORT
+});
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/plain"
+  });
 
+  res.end("Anonymous Chat Room WebSocket Server is running");
+});
+wss.on("listening", () => {
+  console.log(`Anonymous Chat Room WebSocket server running on port ${PORT}`);
+});
+
+
+wss.on("error", (err) => {
+  console.error("WebSocket server error:", err);
+});
 // Online users only. Nothing is written to a database/file.
 const users = new Map(); // socket -> user
 const rooms = new Map([["general", new Set()]]);
