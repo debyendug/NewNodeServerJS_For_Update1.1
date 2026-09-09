@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 
 const PORT = process.env.PORT || 8080;
-const wss = new WebSocket.Server({ port: PORT });
+ const wss = new WebSocket.Server({ port: process.env.PORT || 8080 });
 
 // Online users only. Nothing is written to a database/file.
 const users = new Map(); // socket -> user
