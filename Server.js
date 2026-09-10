@@ -1,20 +1,29 @@
+const http = require("http");
 const WebSocket = require("ws");
+
 const PORT = process.env.PORT || 8080;
-const wss = new WebSocket.Server({
-  port: PORT
-});
+
+// HTTP server required for Render
 const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    "Content-Type": "text/plain"
-  });
+  if (req.url === "/") {
+    res.writeHead(200, {
+      "Content-Type": "text/plain"
+    });
 
-  res.end("Anonymous Chat Room WebSocket Server is running");
+    res.end("Anonymous Chat Server is running");
+    return;
+  }
+
+  res.writeHead(404);
+  res.end("Not Found");
 });
-wss.on("listening", () => {
-  console.log(`Anonymous Chat Room WebSocket server running on port ${PORT}`);
+
+// WebSocket server attached to HTTP server
+const wss = new WebSocket.Server({
+  server: server
 });
 
-
+// WebSocket server error
 wss.on("error", (err) => {
   console.error("WebSocket server error:", err);
 });
@@ -213,5 +222,7 @@ wss.on("connection", ws => {
 
   ws.on("error", err => console.error("WebSocket error:", err.message));
 });
-
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});
 console.log(`Anonymous Chat Room WebSocket server running on port ${PORT}`);
